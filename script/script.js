@@ -5,21 +5,21 @@ const todoControl = document.querySelector('.todo-control'),
     todoList = document.querySelector('.todo-list'),
     todoCompleted = document.querySelector('.todo-completed');
 
-const todoData = [];
+const todoData = localStorage.length > 0 ? JSON.parse(localStorage.getItem('todo')) : [];
 
 const render = function() {
     todoList.textContent = '';
     todoCompleted.textContent = '';
 
-    todoData.forEach(function(item){
+    todoData.forEach(function(item, i){
         const li = document.createElement('li');
         li.classList.add('todo-item');
 
-        li.innerHTML = '<span class="text-todo">' + item.value + '</span>' +
-        '<div class="todo-buttons">' +
-            '<button class="todo-remove"></button>' +
-            '<button class="todo-complete"></button>' +
-        '</div>';
+        li.innerHTML = `<span class="text-todo"> ${item.value} </span>
+        <div class="todo-buttons">
+            <button class="todo-remove"></button>
+            <button class="todo-complete"></button>
+        </div>`;
 
         if (item.completed) {
             todoCompleted.append(li);
@@ -28,26 +28,42 @@ const render = function() {
         }
 
         const btnTodoComplete = li.querySelector('.todo-complete');
+        const btnTodoRemove = li.querySelector('.todo-remove');
 
         btnTodoComplete.addEventListener('click', function() {
             item.completed = !item.completed;
             render();
         });
 
+        btnTodoRemove.addEventListener('click', function() {
+            todoData.splice(i, 1);
+            localStorage.removeItem('todo');
+            render();
+        });
+        localStorage.setItem('todo', JSON.stringify(todoData));
     });
 };
 
-todoControl.addEventListener('submit', function(event) {
-    event.preventDefault();
 
-    const newTodo = {
-        value: headerInput.value,
-        completed: false
-    };
+function addTodoItem() {
+    todoControl.addEventListener('submit', function(event) {
+        event.preventDefault();
+    
+        const newTodo = {
+            value: headerInput.value,
+            completed: false
+        };
+    
+        if (newTodo.value.trim()) {
+            todoData.push(newTodo);
+            headerInput.value = '';
+        } else {
+            headerInput.value = '';
+        }
+        
+        render();
+    });
+}
 
-    todoData.push(newTodo);
-
-    render();
-});
-
+addTodoItem();
 render();
