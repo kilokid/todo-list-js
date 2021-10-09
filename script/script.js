@@ -39,7 +39,7 @@ const render = function() {
             const itemId = item.id;
             const findItem = todoData.findIndex(function(item) {
                 if (itemId === item.id) {
-                    return item.id;
+                    return true;
                 }
             });
             todoData.splice(findItem, 1);
@@ -50,20 +50,25 @@ const render = function() {
 };
 todoControl.addEventListener('submit', function(event) {
     event.preventDefault();
-    const newTodo = {
-        value: headerInput.value,
-        completed: false,
-        id: todoData.length + 1,
-    };
 
-    if (newTodo.value.trim()) {
+    if (headerInput.value.trim()) {
+        const newTodo = {
+            value: headerInput.value,
+            completed: false,
+            id: createId(),
+        };
+
         todoData.push(newTodo);
         updateLsAndRenderItems();
+        headerInput.value = '';
+    } else {
+        headerInput.value = '';
     }
-
-    headerInput.value = '';
 });
 
+function createId() {
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
 
 function updateLsAndRenderItems() {
     localStorage.setItem('todo', JSON.stringify(todoData));
