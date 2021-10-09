@@ -32,33 +32,40 @@ const render = function() {
 
         btnTodoComplete.addEventListener('click', function() {
             item.completed = !item.completed;
-            updateLocalStorage();
+            updateLsAndRenderItems();
         });
 
         btnTodoRemove.addEventListener('click', function() {
-            todoData.splice(i, 1);
-            updateLocalStorage();
+            const itemId = item.id;
+            const findItem = todoData.findIndex(function(item) {
+                if (itemId === item.id) {
+                    return item.id;
+                }
+            });
+            todoData.splice(findItem, 1);
+            updateLsAndRenderItems();
         });
     });
 
     todoControl.addEventListener('submit', function(event) {
         event.preventDefault();
-    
         const newTodo = {
             value: headerInput.value,
-            completed: false
+            completed: false,
+            id: todoData.length + 1,
         };
     
         if (newTodo.value.trim()) {
             todoData.push(newTodo);
-            updateLocalStorage();
+            updateLsAndRenderItems();
         }
 
         headerInput.value = '';
     });
 };
 
-function updateLocalStorage() {
+
+function updateLsAndRenderItems() {
     localStorage.setItem('todo', JSON.stringify(todoData));
     render();
 }
