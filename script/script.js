@@ -47,22 +47,22 @@ const render = function() {
         });
     });
 
-    todoControl.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const newTodo = {
-            value: headerInput.value,
-            completed: false,
-            id: todoData.length + 1,
-        };
-    
-        if (newTodo.value.trim()) {
-            todoData.push(newTodo);
-            updateLsAndRenderItems();
-        }
-
-        headerInput.value = '';
-    });
 };
+todoControl.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const newTodo = {
+        value: headerInput.value,
+        completed: false,
+        id: todoData.length + 1,
+    };
+
+    if (newTodo.value.trim()) {
+        todoData.push(newTodo);
+        updateLsAndRenderItems();
+    }
+
+    headerInput.value = '';
+});
 
 
 function updateLsAndRenderItems() {
