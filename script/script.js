@@ -37,11 +37,7 @@ const render = function() {
 
         btnTodoRemove.addEventListener('click', function() {
             const itemId = item.id;
-            const findItem = todoData.findIndex(function(item) {
-                if (itemId === item.id) {
-                    return true;
-                }
-            });
+            const findItem = todoData.findIndex(item => item.id === itemId); 
             todoData.splice(findItem, 1);
             updateLsAndRenderItems();
         });
@@ -50,20 +46,22 @@ const render = function() {
 };
 todoControl.addEventListener('submit', function(event) {
     event.preventDefault();
+    const trimmedTaskText = headerInput.value.trim();
 
-    if (headerInput.value.trim()) {
-        const newTodo = {
-            value: headerInput.value,
-            completed: false,
-            id: createId(),
-        };
-
-        todoData.push(newTodo);
-        updateLsAndRenderItems();
+    if (!trimmedTaskText) {
         headerInput.value = '';
-    } else {
-        headerInput.value = '';
+        return;
     }
+
+    const newTodo = {
+        value: headerInput.value,
+        completed: false,
+        id: createId(),
+    };
+
+    todoData.push(newTodo);
+    updateLsAndRenderItems();
+    headerInput.value = '';
 });
 
 function createId() {
